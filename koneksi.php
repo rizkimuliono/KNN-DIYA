@@ -3,7 +3,7 @@ function koneksi() {
   $servername = "localhost";
   $username   = "root";
   $password   = "";
-  $db 	      = "dbknn";
+  $db 	      = "dbknn_diya";
 
   $koneksi = mysqli_connect($servername, $username, $password, $db);
 

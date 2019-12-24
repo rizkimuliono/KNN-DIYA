@@ -1,20 +1,20 @@
 <?php
 include_once 'koneksi.php';
 
-$id     = $_POST["id_balita"];
+$id     = $_POST["id_mhs"];
 $nilaik = $_POST['nilaik'];
 $hasil  = $_POST['hasil_prediksi'];
 $date   = date("Y-m-d");
 
 $conn = koneksi();
-$cek  = mysqli_query($conn,"SELECT id_balita FROM PREDIKSI WHERE id_balita=".$id." AND nilaik=".$nilaik."");
+$cek  = mysqli_query($conn,"SELECT id_mhs FROM PREDIKSI WHERE id_mhs=".$id." AND nilaik=".$nilaik."");
 
 if (mysqli_num_rows($cek) <> 0) {
   $simpan = mysqli_query($conn,"UPDATE PREDIKSI set
-    hasil_prediksi='".$hasil."', tanggal='".$date."' WHERE id_balita=".$id." AND nilaik=".$nilaik."");
+    hasil_prediksi='".$hasil."', tanggal='".$date."' WHERE id_mhs=".$id." AND nilaik=".$nilaik."");
   }
   else {
-    $simpan = mysqli_query($conn,"INSERT INTO PREDIKSI (id_balita, nilaik, hasil_prediksi, tanggal)
+    $simpan = mysqli_query($conn,"INSERT INTO PREDIKSI (id_mhs, nilaik, hasil_prediksi, tanggal)
     VALUES (".$id.",'".$nilaik."','".$hasil."','".$date."')");
   }
 
