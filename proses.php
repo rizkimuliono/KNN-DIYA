@@ -158,6 +158,7 @@ mysqli_query($conn,"CREATE TEMPORARY TABLE RangkingSementara(
           }
 
           ?>
+          <hr>
           <div class="table-responsive">
             <h3>Kesimpulan Hasil Prediksi</h3>
             <table class="table table-bordered table-sm">
@@ -189,8 +190,8 @@ mysqli_query($conn,"CREATE TEMPORARY TABLE RangkingSementara(
                 $data = mysqli_fetch_array($kesimpulan);
                 $status = "";
                 $warna  = "";
-                if($data['Status'] == 1) {$status = "Tepat Waktu";$warna = "badge-success";}
-                if($data['Status'] == 2) {$status = "Terlambat";$warna = "badge-danger";}
+                if($data['Status'] == 1) {$status = "Tepat Waktu"; $warna = "label-success";}
+                if($data['Status'] == 2) {$status = "Terlambat"; $warna = "label-danger";}
                 ?>
                 <tr>
                   <td><?=$datates["nama_mhs"]?></td>
@@ -214,7 +215,7 @@ mysqli_query($conn,"CREATE TEMPORARY TABLE RangkingSementara(
                 </td>
                 <td><span id="nilaik"><?=$nilaik?></span></td>
                 <td>
-                  <span class="badge <?=$warna?>" style="font-size: 12px;"><?=$status?></span>
+                  <span class="label <?=$warna?>" style="font-size: 12px;"><?=$status?></span>
                   <span class="invisible" id="id_mhs"><?=$datates["id_mhs"]?></span>
                   <span class="invisible" id="status"><?=$data["Status"]?></span>
                 </td>
@@ -258,8 +259,8 @@ mysqli_query($conn,"CREATE TEMPORARY TABLE RangkingSementara(
               while ($data = mysqli_fetch_array($jarak)) {
                 $status = "";
                 $warna  = "";
-                if($data['Status'] == 1) {$status = "Tepat Waktu";$warna = "badge-success";}
-                if($data['Status'] == 2) {$status = "Terlambat";$warna = "badge-danger";}
+                if($data['Status'] == 1) {$status = "Tepat Waktu";$warna = "label-success";}
+                if($data['Status'] == 2) {$status = "Terlambat";$warna = "label-danger";}
                 ?>
                 <tr>
                   <td><?=$data["Nomor"]?></td>
@@ -283,7 +284,7 @@ mysqli_query($conn,"CREATE TEMPORARY TABLE RangkingSementara(
                   ?>
                 </td>
                 <td><span id="nilaik"><?=$nilaik?></span></td>
-                <td><span class="badge <?=$warna?>" style="font-size: 12px;"><?=$status?></span></td>
+                <td><span class="label <?=$warna?>" style="font-size: 12px;"><?=$status?></span></td>
                 <td><?=$data["Jarak"]?></td>
               </tr>
             <?php } ?>

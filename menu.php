@@ -34,8 +34,8 @@
               <div class="btn btn-primary dropdown-toggle" data-toggle="dropdown">PREDIKSI
                 <span class="caret"></span></div>
                 <ul class="dropdown-menu">
-                  <li><a href="prediksi_mahasiswa.php">Prediksi Per Mahasiswa</a></li>
-                  <li><a href="prediksi_prodi.php">Prediksi Per Prodi</a></li>
+                  <li><a href="prediksi-mahasiswa.php">Prediksi Per Mahasiswa</a></li>
+                  <li><a href="prediksi-prodi.php">Prediksi Per Prodi</a></li>
                 </ul>
               </div>
             </div>
