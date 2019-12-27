@@ -1,6 +1,5 @@
 <?php
-include "koneksi.php";
-$mhs    = $_POST['id_mhs'];
+$mhs = $_POST['id_mhs'];
 $nilaik = $_POST['nilaik'];
 $conn   = koneksi();
 
@@ -14,6 +13,9 @@ mysqli_query($conn,"CREATE TEMPORARY TABLE RangkingSementara(
   IPS5 Decimal(10,2),
   IPS6 Decimal(10,2),
   IPS7 Decimal(10,2),
+  -- IPS8 Decimal(10,2),
+  -- IPS9 Decimal(10,2),
+  -- IPS10 Decimal(10,2),
   sks_lulus Decimal(10,2),
   Jarak Decimal(10,4),
   Status char(1));
@@ -29,26 +31,27 @@ mysqli_query($conn,"CREATE TEMPORARY TABLE RangkingSementara(
     IPS5 Decimal(10,2),
     IPS6 Decimal(10,2),
     IPS7 Decimal(10,2),
+    -- IPS8 Decimal(10,2),
+    -- IPS9 Decimal(10,2),
+    -- IPS10 Decimal(10,2),
     sks_lulus Decimal(10,2),
     Jarak Decimal(10,4),
     Status int(1));
     ");
 
     // Ambil nomor urut terbesar
-    // $nomor    = mysqli_query($conn,"SELECT max(nomor_urut) as max FROM detail_mhs_test WHERE id_mhs_detail='$mhs';");
-    // $nomormax = mysqli_fetch_array($nomor);
-    // $maksimum = $nomormax['max'];
+    $nomor    = mysqli_query($conn,"SELECT max(nomor_urut) as max FROM detail_mhs WHERE id_mhs_detail='$mhs';");
+    $nomormax = mysqli_fetch_array($nomor);
+    $maksimum = $nomormax['max'];
 
     // Data uji mhs
-    //$sql_testing = "SELECT * FROM mhs_test INNER JOIN detail_mhs_test ON mhs_test.id_mhs = detail_mhs_test.id_mhs_detail WHERE mhs.id_mhs='$mhs' AND detail_mhs.nomor_urut='$maksimum'";
-    $sql_testing = "SELECT * FROM mhs_test INNER JOIN detail_mhs_test ON mhs_test.id_mhs = detail_mhs_test.id_mhs_detail WHERE mhs_test.id_mhs='$mhs'";
+    $sql_testing = "SELECT * FROM mhs INNER JOIN detail_mhs ON mhs.id_mhs = detail_mhs.id_mhs_detail WHERE mhs.id_mhs='$mhs' AND detail_mhs.nomor_urut='$maksimum'";
     $testing  = mysqli_query($conn,$sql_testing);
     $datates  = mysqli_fetch_array($testing);
     $gender   = $datates['jenis_kelamin'];
 
     // Data latih mhs
-    //$sql_train = "SELECT * FROM mhs INNER JOIN detail_mhs ON mhs.id_mhs = detail_mhs.id_mhs_detail WHERE mhs.jenis_data='0' AND mhs.jenis_kelamin='$gender'";
-    $sql_train = "SELECT * FROM mhs INNER JOIN detail_mhs ON mhs.id_mhs = detail_mhs.id_mhs_detail WHERE mhs.jenis_data='0'";
+    $sql_train = "SELECT * FROM mhs INNER JOIN detail_mhs ON mhs.id_mhs = detail_mhs.id_mhs_detail WHERE mhs.jenis_data='0' AND mhs.jenis_kelamin='$gender'";
     $training = mysqli_query($conn,$sql_train);
     while ($datatrain = mysqli_fetch_array($training)) {
       // Variable data latih
@@ -59,6 +62,9 @@ mysqli_query($conn,"CREATE TEMPORARY TABLE RangkingSementara(
       $IPS5       = $datatrain['IPS5'];
       $IPS6       = $datatrain['IPS6'];
       $IPS7       = $datatrain['IPS7'];
+      // $IPS8       = $datatrain['IPS8'];
+      // $IPS9       = $datatrain['IPS9'];
+      // $IPS10      = $datatrain['IPS10'];
       $sks_lulus  = $datatrain['sks_lulus'];
       $Nama       = $datatrain['nama_mhs'];
       $Status     = $datatrain['status_tamat'];
@@ -71,6 +77,9 @@ mysqli_query($conn,"CREATE TEMPORARY TABLE RangkingSementara(
       $IPS5_tes       = $datates['IPS5'];
       $IPS6_tes       = $datates['IPS6'];
       $IPS7_tes       = $datates['IPS7'];
+      // $IPS8_tes       = $datates['IPS8'];
+      // $IPS9_tes       = $datates['IPS9'];
+      // $IPS10_tes      = $datates['IPS10'];
       $sks_lulus_tes  = $datates['sks_lulus'];
 
       // Hitung jarak setiap sampel
@@ -82,6 +91,9 @@ mysqli_query($conn,"CREATE TEMPORARY TABLE RangkingSementara(
         pow(($IPS5_tes - $IPS5), 2) +
         pow(($IPS6_tes - $IPS6), 2) +
         pow(($IPS7_tes - $IPS7), 2) +
+        // pow(($IPS8_tes - $IPS8), 2) +
+        // pow(($IPS9_tes - $IPS9), 2) +
+        // pow(($IPS10_tes - $IPS10), 2) +
         pow(($sks_lulus_tes - $sks_lulus), 2));
 
         // Simpan hasil hitung jarak
@@ -94,6 +106,9 @@ mysqli_query($conn,"CREATE TEMPORARY TABLE RangkingSementara(
           IPS5,
           IPS6,
           IPS7,
+          -- IPS8,
+          -- IPS9,
+          -- IPS10,
           sks_lulus,
           Jarak,
           Status)
@@ -106,6 +121,9 @@ mysqli_query($conn,"CREATE TEMPORARY TABLE RangkingSementara(
             '$IPS5',
             '$IPS6',
             '$IPS7',
+            -- '$IPS8',
+            -- '$IPS9',
+            -- '$IPS10',
             '$sks_lulus',
             '$distance',
             '$Status'
@@ -124,6 +142,9 @@ mysqli_query($conn,"CREATE TEMPORARY TABLE RangkingSementara(
           $IPS5_rank      = $datas['IPS5'];
           $IPS6_rank      = $datas['IPS6'];
           $IPS7_rank      = $datas['IPS7'];
+          // $IPS8_rank      = $datas['IPS8'];
+          // $IPS9_rank      = $datas['IPS9'];
+          // $IPS10_rank     = $datas['IPS10'];
           $sks_lulus_rank = $datas['sks_lulus'];
           $Jarak_rank     = $datas['Jarak'];
           $Status         = $datas['Status'];
@@ -138,6 +159,9 @@ mysqli_query($conn,"CREATE TEMPORARY TABLE RangkingSementara(
             IPS5,
             IPS6,
             IPS7,
+            -- IPS8,
+            -- IPS9,
+            -- IPS10,
             sks_lulus,
             Jarak,
             Status
@@ -151,6 +175,9 @@ mysqli_query($conn,"CREATE TEMPORARY TABLE RangkingSementara(
             '$IPS5_rank',
             '$IPS6_rank',
             '$IPS7_rank',
+            -- '$IPS8_rank',
+            -- '$IPS9_rank',
+            -- '$IPS10_rank',
             '$sks_lulus_rank',
             '$Jarak_rank',
             '$Status')";
@@ -160,7 +187,7 @@ mysqli_query($conn,"CREATE TEMPORARY TABLE RangkingSementara(
           ?>
           <div class="table-responsive">
             <h3>Kesimpulan Hasil Prediksi</h3>
-            <table class="table table-bordered table-sm">
+            <table class="table table-bordered">
               <thead class='thead-light'>
                 <tr>
                   <th style="width: 250px">Nama Mahasiswa</th>
@@ -229,7 +256,7 @@ mysqli_query($conn,"CREATE TEMPORARY TABLE RangkingSementara(
 
         <h3 class="box-title">Jarak Terdekat (k = <?=$nilaik?>)</h3>
         <div class="table-responsive">
-          <table class="table table-striped table-bordered table-sm">
+          <table class="table table-striped table-bordered">
             <thead class='thead-light'>
               <tr>
                 <th style="width: 50px">Rangking</th>
@@ -271,9 +298,9 @@ mysqli_query($conn,"CREATE TEMPORARY TABLE RangkingSementara(
                   <td><?=$data["IPS5"]?></td>
                   <td><?=$data["IPS6"]?></td>
                   <td><?=$data["IPS7"]?></td>
-                  <td><?//=$data["IPS8"]?></td>
-                  <td><?//=$data["IPS9"]?></td>
-                  <td><?//=$data["IPS10"]?></td>
+                  <td><?=$data["IPS8"]?></td>
+                  <td><?=$data["IPS9"]?></td>
+                  <td><?=$data["IPS10"]?></td>
                   <td><?=$data["sks_lulus"]?></td>
                   <td><?php
                   $jk = "Laki-laki";

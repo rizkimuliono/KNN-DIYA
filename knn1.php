@@ -22,7 +22,7 @@ echo "<pre>";
 print_r($distances);
 echo "</pre>";
 
-echo getLabel($data, getNearestNeighbors($distances, 5,3)) . "<br>";
+echo getLabel($data, getNearestNeighbors($distances, 8,3)) . "<br>";
 
 /**
 * Calculates eucilean distances for an array dataset
