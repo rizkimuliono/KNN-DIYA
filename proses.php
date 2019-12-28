@@ -14,9 +14,9 @@ mysqli_query($conn,"CREATE TEMPORARY TABLE RangkingSementara(
   IPS5 Decimal(10,2),
   IPS6 Decimal(10,2),
   IPS7 Decimal(10,2),
-  sks_lulus Decimal(10,2),
+  sks_lulus int(5),
   Jarak Decimal(10,4),
-  Status char(1));
+  Status int(1));
   ");
 
   mysqli_query($conn,"CREATE TEMPORARY TABLE Kesimpulan(
@@ -29,7 +29,7 @@ mysqli_query($conn,"CREATE TEMPORARY TABLE RangkingSementara(
     IPS5 Decimal(10,2),
     IPS6 Decimal(10,2),
     IPS7 Decimal(10,2),
-    sks_lulus Decimal(10,2),
+    sks_lulus int(5),
     Jarak Decimal(10,4),
     Status int(1));
     ");
@@ -172,9 +172,9 @@ mysqli_query($conn,"CREATE TEMPORARY TABLE RangkingSementara(
                   <th>IPS5</th>
                   <th>IPS6</th>
                   <th>IPS7</th>
-                  <th>IPS8</th>
+                  <!-- <th>IPS8</th>
                   <th>IPS9</th>
-                  <th>IPS10</th>
+                  <th>IPS10</th> -->
                   <th>SKS Lulus</th>
                   <th>Jenis Kelamin</th>
                   <th>Jarak Terdekat</th>
@@ -202,9 +202,9 @@ mysqli_query($conn,"CREATE TEMPORARY TABLE RangkingSementara(
                   <td><?=$datates["IPS5"]?></td>
                   <td><?=$datates["IPS6"]?></td>
                   <td><?=$datates["IPS7"]?></td>
-                  <td><?//=$datates["IPS8"]?></td>
+                  <!-- <td><?//=$datates["IPS8"]?></td>
                   <td><?//=$datates["IPS9"]?></td>
-                  <td><?//=$datates["IPS10"]?></td>
+                  <td><?//=$datates["IPS10"]?></td> -->
                   <td><?=$datates["sks_lulus"]?></td>
                   <td><?php
                   $jk = "Laki-laki";
@@ -242,9 +242,9 @@ mysqli_query($conn,"CREATE TEMPORARY TABLE RangkingSementara(
                 <th>IPS5</th>
                 <th>IPS6</th>
                 <th>IPS7</th>
-                <th>IPS8</th>
+                <!-- <th>IPS8</th>
                 <th>IPS9</th>
-                <th>IPS10</th>
+                <th>IPS10</th> -->
                 <th>SKS Lulus</th>
                 <th>Jenis Kelamin</th>
                 <th>Jarak Terdekat</th>
@@ -272,9 +272,9 @@ mysqli_query($conn,"CREATE TEMPORARY TABLE RangkingSementara(
                   <td><?=$data["IPS5"]?></td>
                   <td><?=$data["IPS6"]?></td>
                   <td><?=$data["IPS7"]?></td>
-                  <td><?//=$data["IPS8"]?></td>
+                  <!-- <td><?//=$data["IPS8"]?></td>
                   <td><?//=$data["IPS9"]?></td>
-                  <td><?//=$data["IPS10"]?></td>
+                  <td><?//=$data["IPS10"]?></td> -->
                   <td><?=$data["sks_lulus"]?></td>
                   <td><?php
                   $jk = "Laki-laki";
