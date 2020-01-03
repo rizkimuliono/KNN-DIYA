@@ -34,11 +34,22 @@
               <div class="btn btn-primary dropdown-toggle" data-toggle="dropdown">PREDIKSI
                 <span class="caret"></span></div>
                 <ul class="dropdown-menu">
-                  <li><a href="prediksi-mahasiswa.php">Prediksi Per Mahasiswa</a></li>
+                  <li><a href="mahasiswa-knn.php">Prediksi Per Mahasiswa</a></li>
                   <li><a href="prediksi-prodi.php">Prediksi Per Prodi</a></li>
                 </ul>
               </div>
             </div>
+
+            <div class="navbar-form navbar-left">
+              <div class="dropdown">
+                <div class="btn btn-success dropdown-toggle" data-toggle="dropdown">PREDIKSI KNN
+                  <span class="caret"></span></div>
+                  <ul class="dropdown-menu">
+                    <li><a href='test-knn.php'>KNN Single</a></li>
+                    <li><a href='test-knn-multi.php'>KNN Multi</a></li>
+                  </ul>
+                </div>
+              </div>
 
             <div class="navbar-form navbar-left">
               <div class="dropdown">

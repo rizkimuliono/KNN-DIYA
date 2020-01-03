@@ -4,15 +4,27 @@ include 'menu.php';
 include "koneksi.php";
 $conn = koneksi();
 
-$sql  = "SELECT * FROM Acid_test";
+$sql  = "SELECT * FROM mhs inner join detail_mhs on id_mhs = id_mhs_detail GROUP BY id_mhs";
 $res  = mysqli_query($conn, $sql);
 $data = array();
 $n    = 0;
 while ($val = mysqli_fetch_array($res)){
-  $data[$n][0] = $val['ac_name'];
-  $data[$n][1] = $val['ac_acid'];
-  $data[$n][2] = $val['ac_strenght'];
-  $data[$n][3] = $val['ac_class'];
+  $gender = "Perempuan";
+  if($val["jenis_kelamin"] == "L"){
+    $gender = "Laki-laki";
+  }
+  $data[$n][0] = $val['npm_mhs'];
+  $data[$n][1] = $val['nama_mhs'];
+  $data[$n][2] = $gender;
+  $data[$n][3] = $val['IPS1'];
+  $data[$n][4] = $val['IPS2'];
+  $data[$n][5] = $val['IPS3'];
+  $data[$n][6] = $val['IPS4'];
+  $data[$n][7] = $val['IPS5'];
+  $data[$n][8] = $val['IPS6'];
+  $data[$n][9] = $val['IPS7'];
+  $data[$n][10] = $val['sks_lulus'];
+  $data[$n][11] = $val['status_tamat'];
   $n++;
 }
 ?>
@@ -27,19 +39,44 @@ while ($val = mysqli_fetch_array($res)){
   <table class="table table-bordered table-striped">
     <thead>
       <tr>
-        <th>Name</th>
-        <th>Acid</th>
-        <th>Strength</th>
-        <th>Class</th>
+        <th>No</th>
+        <th>NPM</th>
+        <th>MAHASISWA</th>
+        <th>JK</th>
+        <th>IPS1</th>
+        <th>IPS2</th>
+        <th>IPS3</th>
+        <th>IPS4</th>
+        <th>IPS5</th>
+        <th>IPS6</th>
+        <th>IPS7</th>
+        <th>SKS LULUS</th>
+        <th>STATUS</th>
       </tr>
     </thead>
     <tbody>
-      <?php foreach ($data as $key => $value) {?>
+      <?php
+      $no = 1;
+      foreach ($data as $key => $value) {
+        $sts = "Tidak Tepat";
+        if($value[11] == 1){
+          $sts = "Tepat";
+        }
+        ?>
         <tr>
+          <td><?php echo $no++?></td>
           <td><?php echo $value[0]?></td>
           <td><?php echo $value[1]?></td>
           <td><?php echo $value[2]?></td>
           <td><?php echo $value[3]?></td>
+          <td><?php echo $value[4]?></td>
+          <td><?php echo $value[5]?></td>
+          <td><?php echo $value[6]?></td>
+          <td><?php echo $value[7]?></td>
+          <td><?php echo $value[8]?></td>
+          <td><?php echo $value[9]?></td>
+          <td><?php echo $value[10]?></td>
+          <td><?php echo $sts?></td>
         </tr>
       <?php } ?>
     </tbody>
