@@ -118,6 +118,33 @@ while ($val = mysqli_fetch_array($res)){
         <?php } ?>
       </select>
     </div>
+
+    <div id="custom_box">
+      <div class="col-sm-1">
+        <label>IPS1 <input type="number" name="IPS1" class="form-control" value="<?php if(isset($_POST['IPS1'])){echo $_POST['IPS1'];} ?>"></label>
+      </div>
+      <div class="col-sm-1">
+        <label>IPS2 <input type="number" name="IPS2" class="form-control"></label>
+      </div>
+      <div class="col-sm-1">
+        <label>IPS3 <input type="number" name="IPS3" class="form-control"></label>
+      </div>
+      <div class="col-sm-1">
+        <label>IPS4 <input type="number" name="IPS4" class="form-control"></label>
+      </div>
+      <div class="col-sm-1">
+        <label>IPS5 <input type="number" name="IPS5" class="form-control"></label>
+      </div>
+      <div class="col-sm-1">
+        <label>IPS6 <input type="number" name="IPS6" class="form-control"></label>
+      </div>
+      <div class="col-sm-1">
+        <label>IPS7 <input type="number" name="IPS7" class="form-control"></label>
+      </div>
+      <div class="col-sm-2">
+        <label>SKS LULUS <input type="number" name="sks" class="form-control"></label>
+      </div>
+    </div>
     <div class="col-sm-1">
       <!-- <label>Nilai K</label> -->
       <select class="form-control" name="K" required>
@@ -138,56 +165,29 @@ while ($val = mysqli_fetch_array($res)){
   <?php
   if(isset($_POST['hitung'])):
 
-    $id_mhs   = $_POST['id_mhs'];
+    $acid     = $_POST['acid'];
+    $strength = $_POST['strength'];
     $K        = $_POST['K'];
 
     mysqli_query($conn,"TRUNCATE TABLE RangkingSementara");
     mysqli_query($conn,"CREATE TABLE RangkingSementara(
       Rangking int AUTO_INCREMENT primary key,
-      Nama varchar(200),
-      IPS1 Decimal(10,2),
-      IPS2 Decimal(10,2),
-      IPS3 Decimal(10,2),
-      IPS4 Decimal(10,2),
-      IPS5 Decimal(10,2),
-      IPS6 Decimal(10,2),
-      IPS7 Decimal(10,2),
-      sks_lulus int(5),
-      Status int(1));
+      Name varchar(50),
+      Acid int(5),
+      Strength int(5),
+      Class varchar(10),
       Distance Decimal(10,4));
       ");
 
-      $sql_mhs  = "SELECT * FROM mhs_test inner join detail_mhs_test on id_mhs = id_mhs_detail WHERE id_mhs = '$id_mhs' GROUP BY id_mhs";
-      $rest = mysqli_query($conn, $sql_mhs);
-      $row = mysqli_fetch_array($rest);
-      $test_IPS1 = $row['IPS1'];
-      $test_IPS2 = $row['IPS1'];
-      $test_IPS3 = $row['IPS2'];
-      $test_IPS4 = $row['IPS3'];
-      $test_IPS5 = $row['IPS4'];
-      $test_IPS6 = $row['IPS5'];
-      $test_IPS7 = $row['IPS6'];
-      $test_SKS  = $row['sks_lulus'];
-
-      //Train Data
       foreach ($data as $key => $value) {
-        $Name = $value[2];
-        $IPS1 = $value[4];
-        $IPS2 = $value[5];
-        $IPS3 = $value[6];
-        $IPS4 = $value[7];
-        $IPS5 = $value[8];
-        $IPS6 = $value[9];
-        $SKS = $value[10];
-        $Distance = sqrt(
-          pow($value[4]-$IPS, 2) + pow($value[5] - $IPS, 2) +
-          pow($value[6]-$IPS, 2) + pow($value[7] - $IPS, 2) +
-          pow($value[8]-$IPS, 2) + pow($value[9] - $IPS, 2) +
-          pow($value[10] - $IPS, 2)
-        );
-        
-        mysqli_query($conn,"INSERT INTO RangkingSementara (Nama, IPS1, IPS2, IPS3, IPS4, IPS5, IPS6, IPS7 sks_lulus, Status, Distance)
-        VALUES ('$Name','$IPS1','$IPS2','$IPS3','$IPS4','$IPS5','$IPS6','$IPS7','$SKS','$Distance')");
+        $Name = $value[0];
+        $Acid = $value[1];
+        $Strength = $value[2];
+        $Class = $value[3];
+        $Distance = sqrt(pow($value[1]-$acid, 2) + pow($value[2] - $strength, 2));
+
+        mysqli_query($conn,"INSERT INTO RangkingSementara (Name, Acid, Strength, Class, Distance)
+        VALUES ('$Name','$Acid','$Strength','$Class','$Distance')");
       }
       ?>
       <hr>
