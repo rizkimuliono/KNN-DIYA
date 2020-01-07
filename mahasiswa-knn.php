@@ -62,7 +62,7 @@ while ($val = mysqli_fetch_array($res)){
         $sts = "Tidak Tepat";
         $badge = "badge alert-danger";
 
-        if($value[11] == 1){
+        if($value[12] == 'Y'){
           $sts = "Tepat";
           $badge = "badge alert-success";
         }
@@ -88,10 +88,6 @@ while ($val = mysqli_fetch_array($res)){
   <hr>
   <h4>Prediksi Mahasiswa:</h4>
   <form class="form-horizontal" method="post">
-
-    <div class="col-sm-1">
-      <label>Custom<input type="checkbox" name="custom" class="form-control" value="YA"></label>
-    </div>
     <div class="col-md-8">
       <select class="form-control select2" name="id_mhs" id="id_mhs">
         <option value="" readonly >Pilih Mahasiswa</option>
@@ -141,8 +137,8 @@ while ($val = mysqli_fetch_array($res)){
     $id_mhs   = $_POST['id_mhs'];
     $K        = $_POST['K'];
 
-    mysqli_query($conn,"TRUNCATE TABLE RangkingSementara");
-    mysqli_query($conn,"CREATE TABLE RangkingSementara(
+    mysqli_query($conn,"DROP TABLE RangkingSementaraMhs");
+    mysqli_query($conn,"CREATE TABLE RangkingSementaraMhs(
       Rangking int AUTO_INCREMENT primary key,
       Nama varchar(200),
       IPS1 Decimal(10,2),
@@ -152,21 +148,22 @@ while ($val = mysqli_fetch_array($res)){
       IPS5 Decimal(10,2),
       IPS6 Decimal(10,2),
       IPS7 Decimal(10,2),
-      sks_lulus int(5),
-      Status int(1));
+      Sks_lulus int(5),
+      Status varchar(1),
       Distance Decimal(10,4));
       ");
 
       $sql_mhs  = "SELECT * FROM mhs_test inner join detail_mhs_test on id_mhs = id_mhs_detail WHERE id_mhs = '$id_mhs' GROUP BY id_mhs";
       $rest = mysqli_query($conn, $sql_mhs);
       $row = mysqli_fetch_array($rest);
+      $test_name = $row['nama_mhs'];
       $test_IPS1 = $row['IPS1'];
-      $test_IPS2 = $row['IPS1'];
-      $test_IPS3 = $row['IPS2'];
-      $test_IPS4 = $row['IPS3'];
-      $test_IPS5 = $row['IPS4'];
-      $test_IPS6 = $row['IPS5'];
-      $test_IPS7 = $row['IPS6'];
+      $test_IPS2 = $row['IPS2'];
+      $test_IPS3 = $row['IPS3'];
+      $test_IPS4 = $row['IPS4'];
+      $test_IPS5 = $row['IPS5'];
+      $test_IPS6 = $row['IPS6'];
+      $test_IPS7 = $row['IPS7'];
       $test_SKS  = $row['sks_lulus'];
 
       //Train Data
@@ -178,67 +175,91 @@ while ($val = mysqli_fetch_array($res)){
         $IPS4 = $value[7];
         $IPS5 = $value[8];
         $IPS6 = $value[9];
-        $SKS = $value[10];
+        $IPS7 = $value[10];
+        $SKS  = $value[11];
+        $sts  = $value[12];
         $Distance = sqrt(
-          pow($value[4]-$IPS, 2) + pow($value[5] - $IPS, 2) +
-          pow($value[6]-$IPS, 2) + pow($value[7] - $IPS, 2) +
-          pow($value[8]-$IPS, 2) + pow($value[9] - $IPS, 2) +
-          pow($value[10] - $IPS, 2)
+          pow($IPS1 - $test_IPS1, 2) + pow($IPS2 - $test_IPS2, 2) +
+          pow($IPS3 - $test_IPS3, 2) + pow($IPS4 - $test_IPS4, 2) +
+          pow($IPS5 - $test_IPS5, 2) + pow($IPS6 - $test_IPS6, 2) +
+          pow($IPS7 - $test_IPS7, 2) + pow($SKS - $test_SKS, 2)
         );
-        
-        mysqli_query($conn,"INSERT INTO RangkingSementara (Nama, IPS1, IPS2, IPS3, IPS4, IPS5, IPS6, IPS7 sks_lulus, Status, Distance)
-        VALUES ('$Name','$IPS1','$IPS2','$IPS3','$IPS4','$IPS5','$IPS6','$IPS7','$SKS','$Distance')");
+
+        $Name = $conn->real_escape_string($Name);
+        mysqli_query($conn,"INSERT INTO RangkingSementaraMhs (Nama, IPS1, IPS2, IPS3, IPS4, IPS5, IPS6, IPS7, Sks_lulus, Status, Distance)
+        VALUES ('$Name','$IPS1','$IPS2','$IPS3','$IPS4','$IPS5','$IPS6','$IPS7','$SKS','$sts','$Distance')") or die(mysqli_error($conn));
+
       }
       ?>
       <hr>
       <h2>Hasil Prediksi : K = <?php echo $K; ?></h2>
-      <table class="table table-bordered table-striped table-sm">
+      <table class="table table-bordered table-striped table-sm" id="data2">
         <thead>
           <tr>
             <th>Rank</th>
-            <th>Name</th>
-            <th>Acid</th>
-            <th>Strength</th>
-            <th>Class</th>
+            <th>Nama</th>
+            <th>IPS1</th>
+            <th>IPS2</th>
+            <th>IPS3</th>
+            <th>IPS4</th>
+            <th>IPS5</th>
+            <th>IPS6</th>
+            <th>IPS7</th>
+            <th>SKS</th>
+            <th>Status</th>
             <th>Distance</th>
           </tr>
         </thead>
         <tbody>
           <?php
-          $sql = "SELECT * FROM RangkingSementara ORDER BY Distance";
+          $sql = "SELECT * FROM RangkingSementaraMhs ORDER BY Distance";
           $res  = mysqli_query($conn, $sql);
           $n=1;
           while ($val = mysqli_fetch_array($res)){
             $color = '';
-            if($n <= $K){ $color = "info";}
-            if ($val['Class'] == 'Good') {
+            if($n <= $K){ $color = "info"; }
+
+            $sts = "Tidak Tepat";
+            $badge = "badge alert-danger";
+
+            if($val['Status'] == 'Y'){
+              $sts = "Tepat";
               $badge = "badge alert-success";
-            }else {
-              $badge = "badge alert-danger";
             }
+
             ?>
             <tr class="<?php echo $color; ?>">
               <td><?php echo $n++;?></td>
-              <td><?php echo $val['Name'];?></td>
-              <td><?php echo $val['Acid'];?></td>
-              <td><?php echo $val['Strength'];?></td>
-              <td><span class="<?php echo $badge ?>"><?php echo $val['Class'];?></span></td>
+              <td><?php echo $val['Nama'];?></td>
+              <td><?php echo $val['IPS1'];?></td>
+              <td><?php echo $val['IPS2'];?></td>
+              <td><?php echo $val['IPS3'];?></td>
+              <td><?php echo $val['IPS4'];?></td>
+              <td><?php echo $val['IPS5'];?></td>
+              <td><?php echo $val['IPS6'];?></td>
+              <td><?php echo $val['IPS7'];?></td>
+              <td><?php echo $val['Sks_lulus'];?></td>
+              <td><b class="badge <?php echo $badge ?>"><?php echo $sts ?></b></td>
               <td><?php echo $val['Distance'];?></td>
             </tr>
           <?php } ?>
         </tbody>
       </table>
       <?php
-      $sql_r = "SELECT * FROM RangkingSementara ORDER BY Distance ASC LIMIT $K";
+      $sql_r = "SELECT * FROM RangkingSementaraMhs ORDER BY Distance ASC LIMIT $K";
       $res_r  = mysqli_query($conn, $sql_r);
       $n=1;
       while ($valr = mysqli_fetch_array($res_r)){
-        $r[] = $valr['Class'];
+        $r[] = $valr['Status'];
       }
-      // print_r($r);
+      
+      echo "<pre>";
+      print_r($r);
+      echo "</pre>";
+
       $toString = implode(' ', $r);
-      $Good = array('Good');
-      $Bad = array('Bad');
+      $Good = array('Y');
+      $Bad = array('T');
 
       function substr_count_array($haystack, $needle){
         $initial = 0;
@@ -254,36 +275,52 @@ while ($val = mysqli_fetch_array($res)){
       $Good = substr_count_array($toString, $Good);
       $Bad  = substr_count_array($toString, $Bad);
 
-      if($K=1) {
+      if($K==1) {
         $hasil = $r[0];
       }
-      if($K=2){
+      if($K==2){
         $hasil = $r[0];
       }else{
-        if ($Good > $bad) {
-          $hasil = 'Good';
+        if ($Good > $Bad) {
+          $hasil = 'Y';
         }else{
-          $hasil = 'Bad';
+          $hasil = 'T';
         }
       }
 
-      if($hasil == 'Good') {
+      if($hasil == 'Y') {
         $badge = "badge alert-success";
+        $sts = "TEPAT";
       }else {
         $badge = "badge alert-danger";
+        $sts = "TIDAK";
       }
       ?>
       <div class="alert alert-success">Kesimpulan Hasil Prediksi :
         <table class="table table-bordered table-striped">
           <tr>
-            <th>Acid</th>
-            <th>Strength</th>
-            <th>Kesimpulan</th>
+            <th>NAMA</th>
+            <th>IPS1</th>
+            <th>IPS2</th>
+            <th>IPS3</th>
+            <th>IPS4</th>
+            <th>IPS5</th>
+            <th>IPS6</th>
+            <th>IPS7</th>
+            <th>SKS</th>
+            <th>STATUS</th>
           </tr>
           <tr class="active">
-            <td><b><?php echo $acid ?></b></td>
-            <td><b><?php echo $strength ?></b></td>
-            <td><b class="<?php echo $badge ?>"><?php echo $hasil; ?></b></td>
+            <td><b><?php echo $test_name ?></b></td>
+            <td><b><?php echo $test_IPS1 ?></b></td>
+            <td><b><?php echo $test_IPS2 ?></b></td>
+            <td><b><?php echo $test_IPS3 ?></b></td>
+            <td><b><?php echo $test_IPS4 ?></b></td>
+            <td><b><?php echo $test_IPS5 ?></b></td>
+            <td><b><?php echo $test_IPS6 ?></b></td>
+            <td><b><?php echo $test_IPS7 ?></b></td>
+            <td><b><?php echo $test_SKS ?></b></td>
+            <td><b class="badge <?php echo $badge ?>"><?php echo $sts ?></b></td>
           </tr>
         </table>
       </div>
@@ -298,6 +335,7 @@ while ($val = mysqli_fetch_array($res)){
 $(document).ready(function(){
   $('#custom_box').hide();
   $('#data').DataTable();
+  $('#data2').DataTable();
   $('.select2').select2();
   $("html, body").animate({ scrollTop: $(document).height() }, 1500);
 });

@@ -132,7 +132,7 @@ while ($val = mysqli_fetch_array($res)){
             $Acid     = $value[1];
             $Strength = $value[2];
             $Class    = $value[3];
-            $Distance = sqrt(pow($value[1]-$data_uji['acid'][$i], 2) + pow($value[2] - $data_uji['strength'][$i], 2));
+            $Distance = sqrt(pow($Acid - $data_uji['acid'][$i], 2) + pow($Strength - $data_uji['strength'][$i], 2));
             // echo "<br>";
             mysqli_query($conn,"INSERT INTO RangkingSementaraMulti (Name, Acid, Strength, Class, Distance, Step)
             VALUES ('$Name','$Acid','$Strength','$Class','$Distance','$i')");

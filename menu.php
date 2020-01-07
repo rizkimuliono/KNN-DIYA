@@ -31,11 +31,12 @@
 
           <div class="navbar-form navbar-left">
             <div class="dropdown">
-              <div class="btn btn-primary dropdown-toggle" data-toggle="dropdown">PREDIKSI
+              <div class="btn btn-success dropdown-toggle" data-toggle="dropdown">PREDIKSI
                 <span class="caret"></span></div>
                 <ul class="dropdown-menu">
                   <li><a href="mahasiswa-knn.php">Prediksi Per Mahasiswa</a></li>
-                  <li><a href="prediksi-prodi.php">Prediksi Per Prodi</a></li>
+                  <li><a href="mahasiswa-knn-custom.php">Prediksi Per Custom</a></li>
+                  <li><a href="#">Prediksi Per Prodi</a></li>
                 </ul>
               </div>
             </div>
