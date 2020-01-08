@@ -129,7 +129,7 @@ while ($val = mysqli_fetch_array($res)){
       </div>
       <div class="col-sm-2">
         <br>
-          <button type="submit" name="hitung" class="btn btn-success">HITUNG</button>
+        <button type="submit" name="hitung" class="btn btn-success">HITUNG</button>
       </div>
     </form>
   </div>
@@ -215,6 +215,15 @@ while ($val = mysqli_fetch_array($res)){
             while ($val = mysqli_fetch_array($res)){
               $color = '';
               if($n <= $K){ $color = "info"; }
+
+              $sts = "Tidak Tepat";
+              $badge = "badge alert-danger";
+
+              if($val['Status'] == 'Y'){
+                $sts = "Tepat";
+                $badge = "badge alert-success";
+              }
+
               ?>
               <tr class="<?php echo $color; ?>">
                 <td><?php echo $n++;?></td>
@@ -227,12 +236,60 @@ while ($val = mysqli_fetch_array($res)){
                 <td><?php echo $val['IPS6'];?></td>
                 <td><?php echo $val['IPS7'];?></td>
                 <td><?php echo $val['Sks_lulus'];?></td>
-                <td><?php echo $val['Status'];?></td>
+                <td><b class="badge <?php echo $badge ?>"><?php echo $sts ?></b></td>
                 <td><?php echo $val['Distance'];?></td>
               </tr>
             <?php } ?>
           </tbody>
         </table>
+
+        <!-- CHART -->
+        <style media="screen">
+        .highcharts-figure, .highcharts-data-table table {
+          min-width: 360px;
+          max-width: 800px;
+          margin: 1em auto;
+        }
+
+        .highcharts-data-table table {
+          font-family: Verdana, sans-serif;
+          border-collapse: collapse;
+          border: 1px solid #EBEBEB;
+          margin: 10px auto;
+          text-align: center;
+          width: 100%;
+          max-width: 500px;
+        }
+        .highcharts-data-table caption {
+          padding: 1em 0;
+          font-size: 1.2em;
+          color: #555;
+        }
+        .highcharts-data-table th {
+          font-weight: 600;
+          padding: 0.5em;
+        }
+        .highcharts-data-table td, .highcharts-data-table th, .highcharts-data-table caption {
+          padding: 0.5em;
+        }
+        .highcharts-data-table thead tr, .highcharts-data-table tr:nth-child(even) {
+          background: #f8f8f8;
+        }
+        .highcharts-data-table tr:hover {
+          background: #f1f7ff;
+        }
+
+        </style>
+        <script src="https://code.highcharts.com/highcharts.js"></script>
+        <script src="https://code.highcharts.com/modules/exporting.js"></script>
+        <script src="https://code.highcharts.com/modules/export-data.js"></script>
+        <script src="https://code.highcharts.com/modules/accessibility.js"></script>
+
+        <figure class="highcharts-figure">
+          <div id="container"></div>
+          <!-- <p class="highcharts-description">Data Jarak (Distance) antar mahasiswa setelah di traning.</p> -->
+        </figure>
+
         <?php
         $sql_r = "SELECT * FROM RangkingSementaraMhs ORDER BY Distance ASC LIMIT $K";
         $res_r  = mysqli_query($conn, $sql_r);
@@ -326,5 +383,99 @@ $(document).ready(function(){
   $('#data2').DataTable();
   $('.select2').select2();
   $("html, body").animate({ scrollTop: $(document).height() }, 1500);
+
+
+  // CHART
+  Highcharts.chart('container', {
+    chart: {
+      type: 'scatter',
+      zoomType: 'xy'
+    },
+    title: {
+      text: 'Posisi Distance / jarak Ketetanggaan dari 200 Data Sampel Mahasiswa'
+    },
+    subtitle: {
+      text: 'Data Mahasiswa Fakultas Teknik Stambuk 2016'
+    },
+    xAxis: {
+      title: {
+        enabled: true,
+        text: 'Posisi'
+      },
+      startOnTick: true,
+      endOnTick: true,
+      showLastLabel: true
+    },
+    yAxis: {
+      title: {
+        text: 'Distance'
+      }
+    },
+    legend: {
+      layout: 'vertical',
+      align: 'left',
+      verticalAlign: 'bottom',
+      x: 100,
+      y: 70,
+      floating: true,
+      backgroundColor: Highcharts.defaultOptions.chart.backgroundColor,
+      borderWidth: 1
+    },
+    plotOptions: {
+      scatter: {
+        marker: {
+          radius: 5,
+          states: {
+            hover: {
+              enabled: true,
+              lineColor: 'rgb(100,100,100)'
+            }
+          }
+        },
+        states: {
+          hover: {
+            marker: {
+              enabled: false
+            }
+          }
+        },
+        tooltip: {
+          headerFormat: '<b>{series.name}</b><br>',
+          pointFormat: '{point.x}, {point.y}'
+        }
+      }
+    },
+    series: [{
+      name: 'TEPAT WAKTU',
+      color: 'rgba(0, 230, 64, 0.9)',
+      data: [
+        <?php
+        $sql = "SELECT * FROM RangkingSementaraMhs WHERE Status  = 'Y' ORDER BY Distance";
+        $res  = mysqli_query($conn, $sql);
+        while ($val = mysqli_fetch_array($res)){
+          $data_Y[] = '['.$val['Distance'].']';
+        }
+        echo implode(', ',$data_Y);
+        ?>
+      ]
+    },
+    {
+      name: 'TIDAK TEPAT WAKTU',
+      color: 'rgba(225, 0, 0, 0.9)',
+      data: [
+        <?php
+        $data_T = array();
+        $sql = "SELECT * FROM RangkingSementaraMhs WHERE Status  = 'T' ORDER BY Distance";
+        $res  = mysqli_query($conn, $sql);
+        while ($val = mysqli_fetch_array($res)){
+          $data_T[] = '['.$val['Distance'].']';
+        }
+        echo implode(', ',$data_T);
+        ?>
+      ]
+    }]
+  });
+
+
 });
 </script>
