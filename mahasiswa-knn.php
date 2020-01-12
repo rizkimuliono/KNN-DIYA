@@ -242,7 +242,8 @@ if(isset($_POST['hitung'])):
           pow($IPS1 - $test_IPS1, 2) + pow($IPS2 - $test_IPS2, 2) +
           pow($IPS3 - $test_IPS3, 2) + pow($IPS4 - $test_IPS4, 2) +
           pow($IPS5 - $test_IPS5, 2) + pow($IPS6 - $test_IPS6, 2) +
-          pow($IPS7 - $test_IPS7, 2) + pow($SKS - $test_SKS, 2)
+          pow($IPS7 - $test_IPS7, 2)
+          // + pow($SKS - $test_SKS, 2)
         );
         $rumus = "Euclidian Distance";
       }else {
@@ -254,8 +255,8 @@ if(isset($_POST['hitung'])):
           $IPS4 - $test_IPS4 +
           $IPS5 - $test_IPS5 +
           $IPS6 - $test_IPS6 +
-          $IPS7 - $test_IPS7 +
-          $SKS - $test_SKS
+          $IPS7 - $test_IPS7
+          // + $SKS - $test_SKS
         );
         $rumus = "Manhattan Distance";
       }
@@ -507,8 +508,8 @@ $(document).ready(function(){
         $sql1 = "SELECT * FROM mhs inner join detail_mhs on id_mhs = id_mhs_detail WHERE status_tamat = 'Y' GROUP BY id_mhs";
         $res1  = mysqli_query($conn, $sql1);
         while ($val1 = mysqli_fetch_array($res1)){
-          $sum1 = $val1['IPS1'] + $val1['IPS2'] + $val1['IPS3'] + $val1['IPS4'] + $val1['IPS5'] + $val1['IPS6'] + $val1['IPS7'] + $val1['sks_lulus'];
-          $sum1 = $sum1 / 8;
+          $sum1 = $val1['IPS1'] + $val1['IPS2'] + $val1['IPS3'] + $val1['IPS4'] + $val1['IPS5'] + $val1['IPS6'] + $val1['IPS7'] ;
+          $sum1 = $sum1;
           $data_Y2[] = '['.$sum1.']';
         }
         echo implode(', ',$data_Y2);
@@ -523,8 +524,8 @@ $(document).ready(function(){
         $sql = "SELECT * FROM mhs inner join detail_mhs on id_mhs = id_mhs_detail WHERE status_tamat = 'T' GROUP BY id_mhs";
         $res  = mysqli_query($conn, $sql);
         while ($val = mysqli_fetch_array($res)){
-          $sum = $val['IPS1'] + $val['IPS2'] + $val['IPS3'] + $val['IPS4'] + $val['IPS5'] + $val['IPS6'] + $val['IPS7'] + $val['sks_lulus'];
-          $sum = $sum / 8;
+          $sum = $val['IPS1'] + $val['IPS2'] + $val['IPS3'] + $val['IPS4'] + $val['IPS5'] + $val['IPS6'] + $val['IPS7'];
+          $sum = $sum;
           $data_T2[] = '['.$sum.']';
         }
         echo implode(', ',$data_T2);

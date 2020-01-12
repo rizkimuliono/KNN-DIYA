@@ -36,7 +36,7 @@
                 <ul class="dropdown-menu">
                   <li><a href="mahasiswa-knn.php"><i class="glyphicon glyphicon-arrow-right"></i> Prediksi Per Mahasiswa</a></li>
                   <li><a href="mahasiswa-knn-custom.php"><i class="glyphicon glyphicon-arrow-right"></i> Prediksi Per Custom</a></li>
-                  <li><a href="#"><i class="glyphicon glyphicon-arrow-right"></i> Prediksi Per Prodi</a></li>
+                  <li><a href="#"><i class="glyphicon glyphicon-arrow-right"></i> Prediksi Per Multi</a></li>
                 </ul>
               </div>
             </div>
