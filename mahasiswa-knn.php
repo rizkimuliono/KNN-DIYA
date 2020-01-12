@@ -449,7 +449,7 @@ $(document).ready(function(){
       text: 'SEBARAN DATA SAMPEL'
     },
     subtitle: {
-      text: 'Data Mahasiswa Fakultas Teknik Stambuk 2016'
+      text: 'Data Mahasiswa Fakultas Teknik Stambuk 2015'
     },
     xAxis: {
       title: {
@@ -544,7 +544,7 @@ $(document).ready(function(){
       text: 'Posisi Distance / jarak Ketetanggaan dari 200 Data Sampel Mahasiswa'
     },
     subtitle: {
-      text: 'Data Mahasiswa Fakultas Teknik Stambuk 2016'
+      text: 'Data Mahasiswa Fakultas Teknik Stambuk 2015'
     },
     xAxis: {
       title: {

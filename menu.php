@@ -26,17 +26,17 @@
         <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
 
           <div class="navbar-form navbar-left">
-            <a href="index.php" class="btn btn-info">Home</a>
+            <a href="index.php" class="btn btn-info"><i class="glyphicon glyphicon-home"></i>  Home</a>
           </div>
 
           <div class="navbar-form navbar-left">
             <div class="dropdown">
-              <div class="btn btn-success dropdown-toggle" data-toggle="dropdown">PREDIKSI
+              <div class="btn btn-success dropdown-toggle" data-toggle="dropdown"><i class="glyphicon glyphicon-cog"></i>  PREDIKSI
                 <span class="caret"></span></div>
                 <ul class="dropdown-menu">
-                  <li><a href="mahasiswa-knn.php">Prediksi Per Mahasiswa</a></li>
-                  <li><a href="mahasiswa-knn-custom.php">Prediksi Per Custom</a></li>
-                  <li><a href="#">Prediksi Per Prodi</a></li>
+                  <li><a href="mahasiswa-knn.php"><i class="glyphicon glyphicon-arrow-right"></i> Prediksi Per Mahasiswa</a></li>
+                  <li><a href="mahasiswa-knn-custom.php"><i class="glyphicon glyphicon-arrow-right"></i> Prediksi Per Custom</a></li>
+                  <li><a href="#"><i class="glyphicon glyphicon-arrow-right"></i> Prediksi Per Prodi</a></li>
                 </ul>
               </div>
             </div>
@@ -54,17 +54,17 @@
 
             <div class="navbar-form navbar-left">
               <div class="dropdown">
-                <div class="btn btn-warning dropdown-toggle" data-toggle="dropdown">Master Data
+                <div class="btn btn-warning dropdown-toggle" data-toggle="dropdown"><i class="glyphicon glyphicon-hdd"></i> Master Data
                   <span class="caret"></span></div>
                   <ul class="dropdown-menu">
-                    <li><a href="data_mhs_training.php">Data Mahasiswa (Training)</a></li>
-                    <li><a href="data_mhs_testing.php">Data mahasiswa (Testing)</a></li>
+                    <li><a href="data_mhs_training.php"><i class="glyphicon glyphicon-hdd"></i> Data Mahasiswa (Training)</a></li>
+                    <li><a href="data_mhs_testing.php"><i class="glyphicon glyphicon-hdd"></i> Data mahasiswa (Testing)</a></li>
                   </ul>
                 </div>
               </div>
 
               <div class="navbar-form navbar-right">
-                <a href="" class="btn btn-info">ABOUT</a>
+                <a href="#!" class="btn btn-info"><i class="glyphicon glyphicon-info-sign"></i> ABOUT</a>
               </div>
 
             </div><!-- /.navbar-collapse -->
