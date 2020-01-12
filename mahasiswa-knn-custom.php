@@ -1,3 +1,46 @@
+
+<!-- CHART -->
+<style media="screen">
+.highcharts-figure, .highcharts-data-table table {
+  min-width: 360px;
+  max-width: 800px;
+  margin: 1em auto;
+}
+
+.highcharts-data-table table {
+  font-family: Verdana, sans-serif;
+  border-collapse: collapse;
+  border: 1px solid #EBEBEB;
+  margin: 10px auto;
+  text-align: center;
+  width: 100%;
+  max-width: 500px;
+}
+.highcharts-data-table caption {
+  padding: 1em 0;
+  font-size: 1.2em;
+  color: #555;
+}
+.highcharts-data-table th {
+  font-weight: 600;
+  padding: 0.5em;
+}
+.highcharts-data-table td, .highcharts-data-table th, .highcharts-data-table caption {
+  padding: 0.5em;
+}
+.highcharts-data-table thead tr, .highcharts-data-table tr:nth-child(even) {
+  background: #f8f8f8;
+}
+.highcharts-data-table tr:hover {
+  background: #f1f7ff;
+}
+
+</style>
+<script src="https://code.highcharts.com/highcharts.js"></script>
+<script src="https://code.highcharts.com/modules/exporting.js"></script>
+<script src="https://code.highcharts.com/modules/export-data.js"></script>
+<script src="https://code.highcharts.com/modules/accessibility.js"></script>
+
 <?php
 include 'menu.php';
 
@@ -85,6 +128,12 @@ while ($val = mysqli_fetch_array($res)){
       <?php } ?>
     </tbody>
   </table>
+
+  <figure class="highcharts-figure">
+    <div id="container_sample"></div>
+  </figure>
+
+
   <div class="row">
     <hr>
     <h4>Prediksi Mahasiswa:</h4>
@@ -243,51 +292,9 @@ while ($val = mysqli_fetch_array($res)){
           </tbody>
         </table>
 
-        <!-- CHART -->
-        <style media="screen">
-        .highcharts-figure, .highcharts-data-table table {
-          min-width: 360px;
-          max-width: 800px;
-          margin: 1em auto;
-        }
-
-        .highcharts-data-table table {
-          font-family: Verdana, sans-serif;
-          border-collapse: collapse;
-          border: 1px solid #EBEBEB;
-          margin: 10px auto;
-          text-align: center;
-          width: 100%;
-          max-width: 500px;
-        }
-        .highcharts-data-table caption {
-          padding: 1em 0;
-          font-size: 1.2em;
-          color: #555;
-        }
-        .highcharts-data-table th {
-          font-weight: 600;
-          padding: 0.5em;
-        }
-        .highcharts-data-table td, .highcharts-data-table th, .highcharts-data-table caption {
-          padding: 0.5em;
-        }
-        .highcharts-data-table thead tr, .highcharts-data-table tr:nth-child(even) {
-          background: #f8f8f8;
-        }
-        .highcharts-data-table tr:hover {
-          background: #f1f7ff;
-        }
-
-        </style>
-        <script src="https://code.highcharts.com/highcharts.js"></script>
-        <script src="https://code.highcharts.com/modules/exporting.js"></script>
-        <script src="https://code.highcharts.com/modules/export-data.js"></script>
-        <script src="https://code.highcharts.com/modules/accessibility.js"></script>
 
         <figure class="highcharts-figure">
           <div id="container"></div>
-          <!-- <p class="highcharts-description">Data Jarak (Distance) antar mahasiswa setelah di traning.</p> -->
         </figure>
 
         <?php
@@ -384,6 +391,99 @@ $(document).ready(function(){
   $('.select2').select2();
   $("html, body").animate({ scrollTop: $(document).height() }, 1500);
 
+  //CHART SAMPLE
+  Highcharts.chart('container_sample', {
+    chart: {
+      type: 'scatter',
+      zoomType: 'xy'
+    },
+    title: {
+      text: 'DATA SAMPEL'
+    },
+    subtitle: {
+      text: 'Data Mahasiswa Fakultas Teknik Stambuk 2016'
+    },
+    xAxis: {
+      title: {
+        enabled: true,
+        text: 'Posisi'
+      },
+      startOnTick: true,
+      endOnTick: true,
+      showLastLabel: true
+    },
+    yAxis: {
+      title: {
+        text: 'Distance'
+      }
+    },
+    legend: {
+      layout: 'vertical',
+      align: 'left',
+      verticalAlign: 'bottom',
+      x: 100,
+      y: 70,
+      floating: true,
+      backgroundColor: Highcharts.defaultOptions.chart.backgroundColor,
+      borderWidth: 1
+    },
+    plotOptions: {
+      scatter: {
+        marker: {
+          radius: 5,
+          states: {
+            hover: {
+              enabled: true,
+              lineColor: 'rgb(100,100,100)'
+            }
+          }
+        },
+        states: {
+          hover: {
+            marker: {
+              enabled: false
+            }
+          }
+        },
+        tooltip: {
+          headerFormat: '<b>{series.name}</b><br>',
+          pointFormat: '{point.x}, {point.y}'
+        }
+      }
+    },
+    series: [{
+      name: 'TEPAT WAKTU',
+      color: 'rgba(0, 230, 64, 0.9)',
+      data: [
+        <?php
+        $sql = "SELECT * FROM mhs inner join detail_mhs on id_mhs = id_mhs_detail WHERE status_tamat = 'Y' GROUP BY id_mhs";
+        $res  = mysqli_query($conn, $sql);
+        while ($val = mysqli_fetch_array($res)){
+          $sum = $val['IPS1'] + $val['IPS2'] + $val['IPS3'] + $val['IPS4'] + $val['IPS5'] + $val['IPS6'] + $val['IPS7'] + $val['sks_lulus'];
+          $sum = $sum / 8;
+          $data_Y[] = '['.$sum.']';
+        }
+        echo implode(', ',$data_Y);
+        ?>
+      ]
+    },
+    {
+      name: 'TIDAK TEPAT WAKTU',
+      color: 'rgba(225, 0, 0, 0.9)',
+      data: [
+        <?php
+        $sql = "SELECT * FROM mhs inner join detail_mhs on id_mhs = id_mhs_detail WHERE status_tamat = 'T' GROUP BY id_mhs";
+        $res  = mysqli_query($conn, $sql);
+        while ($val = mysqli_fetch_array($res)){
+          $sum = $val['IPS1'] + $val['IPS2'] + $val['IPS3'] + $val['IPS4'] + $val['IPS5'] + $val['IPS6'] + $val['IPS7'] + $val['sks_lulus'];
+          $sum = $sum / 8;
+          $data_T[] = '['.$sum.']';
+        }
+        echo implode(', ',$data_T);
+        ?>
+      ]
+    }]
+  });
 
   // CHART
   Highcharts.chart('container', {
@@ -450,10 +550,12 @@ $(document).ready(function(){
       color: 'rgba(0, 230, 64, 0.9)',
       data: [
         <?php
-        $sql = "SELECT * FROM RangkingSementaraMhs WHERE Status  = 'Y' ORDER BY Distance";
+        $data_Y = array();
+        $sql  = "SELECT * FROM RangkingSementaraMhs WHERE Status  = 'Y' ORDER BY Distance ASC";
         $res  = mysqli_query($conn, $sql);
         while ($val = mysqli_fetch_array($res)){
-          $data_Y[] = '['.$val['Distance'].']';
+          $sum =  $val['Distance'];
+          $data_Y[] = '['.$sum.']';
         }
         echo implode(', ',$data_Y);
         ?>
@@ -465,10 +567,11 @@ $(document).ready(function(){
       data: [
         <?php
         $data_T = array();
-        $sql = "SELECT * FROM RangkingSementaraMhs WHERE Status  = 'T' ORDER BY Distance";
+        $sql  = "SELECT * FROM RangkingSementaraMhs WHERE Status  = 'T' ORDER BY Distance ASC";
         $res  = mysqli_query($conn, $sql);
         while ($val = mysqli_fetch_array($res)){
-          $data_T[] = '['.$val['Distance'].']';
+          $sum = $val['Distance'];
+          $data_T[] = '['.$sum.']';
         }
         echo implode(', ',$data_T);
         ?>
