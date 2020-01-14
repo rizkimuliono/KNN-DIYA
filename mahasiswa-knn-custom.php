@@ -36,10 +36,11 @@
 }
 
 </style>
-<script src="https://code.highcharts.com/highcharts.js"></script>
-<script src="https://code.highcharts.com/modules/exporting.js"></script>
-<script src="https://code.highcharts.com/modules/export-data.js"></script>
-<script src="https://code.highcharts.com/modules/accessibility.js"></script>
+<script src="Highcharts-8.0.0/code/highcharts.js"></script>
+<script src="Highcharts-8.0.0/code/highcharts-more.js"></script>
+<script src="Highcharts-8.0.0/code/modules/exporting.js"></script>
+<script src="Highcharts-8.0.0/code/modules/export-data.js"></script>
+<script src="Highcharts-8.0.0/code/modules/accessibility.js"></script>
 
 <?php
 include 'menu.php';
@@ -258,7 +259,7 @@ while ($val = mysqli_fetch_array($res)){
           </thead>
           <tbody>
             <?php
-            $sql = "SELECT * FROM RangkingSementaraMhs ORDER BY Distance";
+            $sql = "SELECT * FROM RangkingSementaraMhs WHERE Distance >= 0 ORDER BY Distance";
             $res  = mysqli_query($conn, $sql);
             $n=1;
             while ($val = mysqli_fetch_array($res)){
@@ -298,7 +299,7 @@ while ($val = mysqli_fetch_array($res)){
         </figure>
 
         <?php
-        $sql_r = "SELECT * FROM RangkingSementaraMhs ORDER BY Distance ASC LIMIT $K";
+        $sql_r = "SELECT * FROM RangkingSementaraMhs WHERE Distance >= 0 ORDER BY Distance ASC LIMIT $K";
         $res_r  = mysqli_query($conn, $sql_r);
         $n=1;
         while ($valr = mysqli_fetch_array($res_r)){
@@ -459,8 +460,8 @@ $(document).ready(function(){
         $sql = "SELECT * FROM mhs inner join detail_mhs on id_mhs = id_mhs_detail WHERE status_tamat = 'Y' GROUP BY id_mhs";
         $res  = mysqli_query($conn, $sql);
         while ($val = mysqli_fetch_array($res)){
-          $sum = $val['IPS1'] + $val['IPS2'] + $val['IPS3'] + $val['IPS4'] + $val['IPS5'] + $val['IPS6'] + $val['IPS7'] + $val['sks_lulus'];
-          $sum = $sum / 8;
+          $sum = $val['IPS1'] + $val['IPS2'] + $val['IPS3'] + $val['IPS4'] + $val['IPS5'] + $val['IPS6'] + $val['IPS7'];
+          $sum = $sum;
           $data_Y[] = '['.$sum.']';
         }
         echo implode(', ',$data_Y);
@@ -475,8 +476,8 @@ $(document).ready(function(){
         $sql = "SELECT * FROM mhs inner join detail_mhs on id_mhs = id_mhs_detail WHERE status_tamat = 'T' GROUP BY id_mhs";
         $res  = mysqli_query($conn, $sql);
         while ($val = mysqli_fetch_array($res)){
-          $sum = $val['IPS1'] + $val['IPS2'] + $val['IPS3'] + $val['IPS4'] + $val['IPS5'] + $val['IPS6'] + $val['IPS7'] + $val['sks_lulus'];
-          $sum = $sum / 8;
+          $sum = $val['IPS1'] + $val['IPS2'] + $val['IPS3'] + $val['IPS4'] + $val['IPS5'] + $val['IPS6'] + $val['IPS7'];
+          $sum = $sum;
           $data_T[] = '['.$sum.']';
         }
         echo implode(', ',$data_T);

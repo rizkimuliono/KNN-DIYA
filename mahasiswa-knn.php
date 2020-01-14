@@ -35,11 +35,12 @@
 }
 
 </style>
-<script src="https://code.highcharts.com/highcharts.js"></script>
-<script src="https://code.highcharts.com/highcharts-more.js"></script>
-<script src="https://code.highcharts.com/modules/exporting.js"></script>
-<script src="https://code.highcharts.com/modules/export-data.js"></script>
-<script src="https://code.highcharts.com/modules/accessibility.js"></script>
+
+<script src="Highcharts-8.0.0/code/highcharts.js"></script>
+<script src="Highcharts-8.0.0/code/highcharts-more.js"></script>
+<script src="Highcharts-8.0.0/code/modules/exporting.js"></script>
+<script src="Highcharts-8.0.0/code/modules/export-data.js"></script>
+<script src="Highcharts-8.0.0/code/modules/accessibility.js"></script>
 
 <?php
 include 'menu.php';
@@ -243,7 +244,7 @@ if(isset($_POST['hitung'])):
           pow($IPS3 - $test_IPS3, 2) + pow($IPS4 - $test_IPS4, 2) +
           pow($IPS5 - $test_IPS5, 2) + pow($IPS6 - $test_IPS6, 2) +
           pow($IPS7 - $test_IPS7, 2)
-          // + pow($SKS - $test_SKS, 2)
+          + pow($SKS - $test_SKS, 2)
         );
         $rumus = "Euclidian Distance";
       }else {
@@ -256,7 +257,7 @@ if(isset($_POST['hitung'])):
           $IPS5 - $test_IPS5 +
           $IPS6 - $test_IPS6 +
           $IPS7 - $test_IPS7
-          // + $SKS - $test_SKS
+          + $SKS - $test_SKS
         );
         $rumus = "Manhattan Distance";
       }
@@ -288,7 +289,9 @@ if(isset($_POST['hitung'])):
       </thead>
       <tbody>
         <?php
-        $sql = "SELECT * FROM RangkingSementaraMhs ORDER BY Distance";
+        //$sql = "SELECT * FROM RangkingSementaraMhs ORDER BY Distance";
+        $sql = "SELECT * FROM RangkingSementaraMhs WHERE Distance >= 0 ORDER BY Distance";
+
         $res  = mysqli_query($conn, $sql);
         $n = 1; $io = 0;
         while ($val = mysqli_fetch_array($res)){
@@ -328,7 +331,7 @@ if(isset($_POST['hitung'])):
     <figure class="highcharts-figure"><div id="container"></div></figure>
 
     <?php
-    $sql_r = "SELECT * FROM RangkingSementaraMhs ORDER BY Distance ASC LIMIT $K";
+    $sql_r = "SELECT * FROM RangkingSementaraMhs WHERE Distance >= 0 ORDER BY Distance ASC LIMIT $K";
     $res_r  = mysqli_query($conn, $sql_r);
     $n=1;
     while ($valr = mysqli_fetch_array($res_r)){
