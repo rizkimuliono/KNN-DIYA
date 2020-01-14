@@ -104,11 +104,11 @@ while ($val = mysqli_fetch_array($res)){
       $no = 1;
       foreach ($data as $key => $value) {
         $sts = "Tidak Tepat";
-        $badge = "badge alert-danger";
+        $tepatge = "badge alert-danger";
 
         if($value[12] == 'Y'){
           $sts = "Tepat";
-          $badge = "badge alert-success";
+          $tepatge = "badge alert-success";
         }
         ?>
         <tr>
@@ -124,7 +124,7 @@ while ($val = mysqli_fetch_array($res)){
           <td><?php echo $value[9]?></td>
           <td><?php echo $value[10]?></td>
           <td><?php echo $value[11]?></td>
-          <td><b class="<?php echo $badge ?>"><?php echo $sts?></b></td>
+          <td><b class="<?php echo $tepatge ?>"><?php echo $sts?></b></td>
         </tr>
       <?php } ?>
     </tbody>
@@ -192,11 +192,10 @@ while ($val = mysqli_fetch_array($res)){
 <?php
 if(isset($_POST['hitung'])):
 
-  $id_mhs   = $_POST['id_mhs'];
-  $K        = $_POST['K'];
+  $K = $_POST['K'];
 
   mysqli_query($conn,"DROP TABLE RangkingSementaraMhs");
-  mysqli_query($conn,"CREATE TABLE RangkingSementaraMhs(
+  mysqli_query($conn,"CREATE TABLE RangkingSementaraMhsMulti(
     Rangking int AUTO_INCREMENT primary key,
     Nama varchar(200),
     IPS1 Decimal(10,2),
@@ -209,227 +208,227 @@ if(isset($_POST['hitung'])):
     Sks_lulus int(5),
     Status varchar(1),
     Distance Decimal(10,4));
+    Step int(5));
     ");
 
-    $sql_mhs  = "SELECT * FROM mhs_test inner join detail_mhs_test on id_mhs = id_mhs_detail WHERE id_mhs = '$id_mhs' GROUP BY id_mhs";
-    $rest = mysqli_query($conn, $sql_mhs);
-    $row = mysqli_fetch_array($rest);
-    $test_name = $row['nama_mhs'];
-    $test_IPS1 = $row['IPS1'];
-    $test_IPS2 = $row['IPS2'];
-    $test_IPS3 = $row['IPS3'];
-    $test_IPS4 = $row['IPS4'];
-    $test_IPS5 = $row['IPS5'];
-    $test_IPS6 = $row['IPS6'];
-    $test_IPS7 = $row['IPS7'];
-    $test_SKS  = $row['sks_lulus'];
+    mysqli_query($conn,"CREATE TABLE HasilMhs(
+      id int AUTO_INCREMENT primary key,
+      Nama varchar(200),
+      IPS1 Decimal(10,2),
+      IPS2 Decimal(10,2),
+      IPS3 Decimal(10,2),
+      IPS4 Decimal(10,2),
+      IPS5 Decimal(10,2),
+      IPS6 Decimal(10,2),
+      IPS7 Decimal(10,2),
+      Sks_lulus int(5),
+      Status varchar(1));
+      ");
 
-    //Train Data
-    foreach ($data as $key => $value) {
-      $Name = $value[2];
-      $IPS1 = $value[4];
-      $IPS2 = $value[5];
-      $IPS3 = $value[6];
-      $IPS4 = $value[7];
-      $IPS5 = $value[8];
-      $IPS6 = $value[9];
-      $IPS7 = $value[10];
-      $SKS  = $value[11];
-      $sts  = $value[12];
-
-      if ($_POST['rumus'] == 'E') {
-        //Euclidian Distance
-        $Distance = sqrt(
-          pow($IPS1 - $test_IPS1, 2) + pow($IPS2 - $test_IPS2, 2) +
-          pow($IPS3 - $test_IPS3, 2) + pow($IPS4 - $test_IPS4, 2) +
-          pow($IPS5 - $test_IPS5, 2) + pow($IPS6 - $test_IPS6, 2) +
-          pow($IPS7 - $test_IPS7, 2)
-          + pow($SKS - $test_SKS, 2)
-        );
-        $rumus = "Euclidian Distance";
-      }else {
-        //Manhattan Distance
-        $Distance = (
-          $IPS1 - $test_IPS1 +
-          $IPS2 - $test_IPS2 +
-          $IPS3 - $test_IPS3 +
-          $IPS4 - $test_IPS4 +
-          $IPS5 - $test_IPS5 +
-          $IPS6 - $test_IPS6 +
-          $IPS7 - $test_IPS7
-          + $SKS - $test_SKS
-        );
-        $rumus = "Manhattan Distance";
+      function substr_count_array($haystack, $needle){
+        $initial = 0;
+        $bits_of_haystack = explode(' ', $haystack);
+        foreach ($needle as $substring) {
+          if(!in_array($substring, $bits_of_haystack))
+          continue;
+          $initial += substr_count($haystack, $substring);
+        }
+        return $initial;
       }
 
-      $Name = $conn->real_escape_string($Name);
-      mysqli_query($conn,"INSERT INTO RangkingSementaraMhs (Nama, IPS1, IPS2, IPS3, IPS4, IPS5, IPS6, IPS7, Sks_lulus, Status, Distance)
-      VALUES ('$Name','$IPS1','$IPS2','$IPS3','$IPS4','$IPS5','$IPS6','$IPS7','$SKS','$sts','$Distance')") or die(mysqli_error($conn));
 
-    }
-    ?>
-    <hr>
-    <h2>Hasil Prediksi : K = <?php echo $K; ?> | <small>dengan Rumus : <i style="color:blue;"><?=$rumus?></i></small></h2>
-    <table class="table table-bordered table-striped table-sm" id="data2">
-      <thead>
-        <tr>
-          <th>Rank</th>
-          <th>Nama</th>
-          <th>IPS1</th>
-          <th>IPS2</th>
-          <th>IPS3</th>
-          <th>IPS4</th>
-          <th>IPS5</th>
-          <th>IPS6</th>
-          <th>IPS7</th>
-          <th>SKS</th>
-          <th>Status</th>
-          <th>Distance</th>
-        </tr>
-      </thead>
-      <tbody>
-        <?php
-        //$sql = "SELECT * FROM RangkingSementaraMhs ORDER BY Distance";
-        $sql = "SELECT * FROM RangkingSementaraMhs WHERE Distance >= 0 ORDER BY Distance";
+      $sql_mhs  = "SELECT * FROM mhs inner join detail_mhs on id_mhs = id_mhs_detail GROUP BY id_mhs";
+      $rest = mysqli_query($conn, $sql_mhs);
+      $jlh_test = mysqli_num_rows($rest);
+      echo "JLH :".$jlh_test;
+      $n = 0;
+      while ($row = mysqli_fetch_array($rest)){
+        $data_test[$n][0] = $val['id_mhs'];
+        $data_test[$n][1] = $val['npm_mhs'];
+        $data_test[$n][2] = $val['nama_mhs'];
+        $data_test[$n][3] = $gender;
+        $data_test[$n][4] = $val['IPS1'];
+        $data_test[$n][5] = $val['IPS2'];
+        $data_test[$n][6] = $val['IPS3'];
+        $data_test[$n][7] = $val['IPS4'];
+        $data_test[$n][8] = $val['IPS5'];
+        $data_test[$n][9] = $val['IPS6'];
+        $data_test[$n][10] = $val['IPS7'];
+        $data_test[$n][11] = $val['sks_lulus'];
+        $n++;
+      }
 
-        $res  = mysqli_query($conn, $sql);
-        $n = 1; $io = 0;
-        while ($val = mysqli_fetch_array($res)){
+      $tepat = 0;
+      $tidak = 0;
 
-          $color = '';
-          if($n <= $K){ $color = "info"; }
+      for ($i=0; $i < $jlh_test; $i++) {
 
-          $sts   = "Tidak Tepat";
-          $badge = "badge alert-danger";
+        //Training Data
+        foreach ($data as $key => $value) {
+          $Name = $value[2];
+          $IPS1 = $value[4];
+          $IPS2 = $value[5];
+          $IPS3 = $value[6];
+          $IPS4 = $value[7];
+          $IPS5 = $value[8];
+          $IPS6 = $value[9];
+          $IPS7 = $value[10];
+          $SKS  = $value[11];
+          $sts  = $value[12];
 
-          if($val['Status'] == 'Y'){
-            $sts   = "Tepat";
-            $badge = "badge alert-success";
+          //variabel
+          $test_nama = $data_test[$i][2];
+          $test_IPS1 = $data_test[$i][4];
+          $test_IPS2 = $data_test[$i][5];
+          $test_IPS3 = $data_test[$i][6];
+          $test_IPS4 = $data_test[$i][7];
+          $test_IPS5 = $data_test[$i][8];
+          $test_IPS6 = $data_test[$i][9];
+          $test_IPS7 = $data_test[$i][10];
+          $test_SKS  = $data_test[$i][11];
+
+          if ($_POST['rumus'] == 'E') {
+            //Euclidian Distance
+            $Distance = sqrt(
+              pow($IPS1 - $test_IPS1, 2) + pow($IPS2 - $test_IPS2, 2) +
+              pow($IPS3 - $test_IPS3, 2) + pow($IPS4 - $test_IPS4, 2) +
+              pow($IPS5 - $test_IPS5, 2) + pow($IPS6 - $test_IPS6, 2) +
+              pow($IPS7 - $test_IPS7, 2)
+              + pow($SKS - $test_SKS, 2)
+            );
+            $rumus = "Euclidian Distance";
+          }else {
+            //Manhattan Distance
+            $Distance = (
+              $IPS1 - $test_IPS1 +
+              $IPS2 - $test_IPS2 +
+              $IPS3 - $test_IPS3 +
+              $IPS4 - $test_IPS4 +
+              $IPS5 - $test_IPS5 +
+              $IPS6 - $test_IPS6 +
+              $IPS7 - $test_IPS7
+              + $SKS - $test_SKS
+            );
+            $rumus = "Manhattan Distance";
           }
 
-          ?>
-          <tr class="<?php echo $color; ?>">
-            <td><?php echo $n++;?></td>
-            <td><?php echo $val['Nama'];?></td>
-            <td><?php echo $val['IPS1'];?></td>
-            <td><?php echo $val['IPS2'];?></td>
-            <td><?php echo $val['IPS3'];?></td>
-            <td><?php echo $val['IPS4'];?></td>
-            <td><?php echo $val['IPS5'];?></td>
-            <td><?php echo $val['IPS6'];?></td>
-            <td><?php echo $val['IPS7'];?></td>
-            <td><?php echo $val['Sks_lulus'];?></td>
-            <td><b class="badge <?php echo $badge ?>"><?php echo $sts ?></b></td>
-            <td><?php echo $val['Distance'];?></td>
-          </tr>
-          <?php
+          $Name = $conn->real_escape_string($Name);
+          mysqli_query($conn,"INSERT INTO RangkingSementaraMhsMulti (Nama, IPS1, IPS2, IPS3, IPS4, IPS5, IPS6, IPS7, Sks_lulus, Status, Distance, Step)
+          VALUES ('$Name','$IPS1','$IPS2','$IPS3','$IPS4','$IPS5','$IPS6','$IPS7','$SKS','$sts','$Distance','$i')") or die(mysqli_error($conn));
+        } //akhir foreach
+
+        $sql_ = "SELECT * FROM RangkingSementaraMhsMulti WHERE Step = '$i' ORDER BY Distance ASC LIMIT $K";
+        $res_  = mysqli_query($conn, $sql_);
+        //isi nilai STATUS
+        while ($val_ = mysqli_fetch_array($res_)){
+          if ($val_['Status'] == 'Y') {
+            $r[] = $tepat ++;
+          }
+          if ($val_['Status'] == 'T') {
+            $r[] = $tidak ++;
+          }
+          $r[] = $val_['Status'];
         }
-        ?>
-      </tbody>
-    </table>
 
-    <figure class="highcharts-figure"><div id="container"></div></figure>
+        //isi nilai hasil berdasarkan nilai K
+        if($K == 1) {
+          $hasil = $r[0];
+        }else if($K == 2){
+          $hasil = $r[0];
+        }else{
+          if ($Tepat > $Tidak) {
+            $hasil = 'Y';
+          }else{
+            $hasil = 'T';
+          }
+        }
 
-    <?php
-    $sql_r = "SELECT * FROM RangkingSementaraMhs WHERE Distance >= 0 ORDER BY Distance ASC LIMIT $K";
-    $res_r  = mysqli_query($conn, $sql_r);
-    $n=1;
-    while ($valr = mysqli_fetch_array($res_r)){
-      $r[] = $valr['Status'];
-    }
-    ?>
-    <div id="accordion">
-      <div class="card">
-        <div class="card-header" id="headingOne">
-          <h5 class="mb-0">
-            <button class="btn btn-link" data-toggle="collapse" data-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
-              <i class="glyphicon glyphicon-eye-open"></i> Lihat Array Classification Process
-            </button>
-          </h5>
-        </div>
+        //INSERT HASIL ==========
+        $test_nama = $data_test[$i][2];
+        $test_IPS1 = $data_test[$i][4];
+        $test_IPS2 = $data_test[$i][5];
+        $test_IPS3 = $data_test[$i][6];
+        $test_IPS4 = $data_test[$i][7];
+        $test_IPS5 = $data_test[$i][8];
+        $test_IPS6 = $data_test[$i][9];
+        $test_IPS7 = $data_test[$i][10];
+        $test_SKS  = $data_test[$i][11];
+        $hasil_final = $hasil;
 
-        <div id="collapseOne" class="collapse" aria-labelledby="headingOne" data-parent="#accordion">
-          <div class="card-body">
-            <?php
-            echo "<pre>";
-            print_r($r);
-            echo "</pre>";
+        mysqli_query($conn,"INSERT INTO HasilMhs (Nama, IPS1, IPS2, IPS3, IPS4, IPS5, IPS6, IPS7, Sks_lulus, Status)
+        VALUES ('$test_nama, '$test_IPS1', '$test_IPS2', '$test_IPS3', '$test_IPS4', '$test_IPS5', '$test_IPS6', '$test_IPS7', '$test_SKS', '$hasil_final')");
+
+        // $dataHasil['acid'] = $Acid_final;
+        // $dataHasil['strength'] = $Strength_final;
+        // $dataHasil['class'] = $Class_final;
+
+        // echo "<pre>";
+        // print_r($dataHasil);
+        // echo "</pre>";
+        // $r[] = "";
+        unset($r);
+        $r = array();
+
+      } //akhir for
+      ?>
+      <hr>
+      <h2>Hasil Prediksi : K = <?php echo $K; ?> | <small>dengan Rumus : <i style="color:blue;"><?=$rumus?></i></small></h2>
+      <table class="table table-bordered table-striped table-sm" id="data2">
+        <thead>
+          <tr>
+            <th>Rank</th>
+            <th>Nama</th>
+            <th>IPS1</th>
+            <th>IPS2</th>
+            <th>IPS3</th>
+            <th>IPS4</th>
+            <th>IPS5</th>
+            <th>IPS6</th>
+            <th>IPS7</th>
+            <th>SKS</th>
+            <th>Status</th>
+            <th>Distance</th>
+          </tr>
+        </thead>
+        <tbody>
+          <?php
+          $sql = "SELECT * FROM HasilMhs ORDER BY id";
+          $res  = mysqli_query($conn, $sql);
+          $n = 1;
+          while ($val = mysqli_fetch_array($res)){
+            $color = '';
+            if($n <= $K){ $color = "info"; }
+            $sts   = "Tidak Tepat";
+            $tepatge = "badge alert-danger";
+            if($val['Status'] == 'Y'){
+              $sts   = "Tepat";
+              $tepatge = "badge alert-success";
+            }
             ?>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <?php
-    $toString = implode(' ', $r);
-    $Good = array('Y');
-    $Bad = array('T');
-
-    function substr_count_array($haystack, $needle){
-      $initial = 0;
-      $bits_of_haystack = explode(' ', $haystack);
-      foreach ($needle as $substring) {
-        if(!in_array($substring, $bits_of_haystack))
-        continue;
-        $initial += substr_count($haystack, $substring);
-      }
-      return $initial;
-    }
-
-    $Good = substr_count_array($toString, $Good);
-    $Bad  = substr_count_array($toString, $Bad);
-
-    if($K==1) {
-      $hasil = $r[0];
-    }
-    if($K==2){
-      $hasil = $r[0];
-    }else{
-      if ($Good > $Bad) {
-        $hasil = 'Y';
-      }else{
-        $hasil = 'T';
-      }
-    }
-
-    if($hasil == 'Y') {
-      $badge = "badge alert-success";
-      $sts = "TEPAT";
-    }else {
-      $badge = "badge alert-danger";
-      $sts = "TIDAK";
-    }
-    ?>
-    <div class="alert alert-success">Kesimpulan Hasil Prediksi :
-      <table class="table table-bordered table-striped">
-        <tr>
-          <th>NAMA</th>
-          <th>IPS1</th>
-          <th>IPS2</th>
-          <th>IPS3</th>
-          <th>IPS4</th>
-          <th>IPS5</th>
-          <th>IPS6</th>
-          <th>IPS7</th>
-          <th>SKS</th>
-          <th>STATUS</th>
-        </tr>
-        <tr class="active">
-          <td><b><?php echo $test_name ?></b></td>
-          <td><b><?php echo $test_IPS1 ?></b></td>
-          <td><b><?php echo $test_IPS2 ?></b></td>
-          <td><b><?php echo $test_IPS3 ?></b></td>
-          <td><b><?php echo $test_IPS4 ?></b></td>
-          <td><b><?php echo $test_IPS5 ?></b></td>
-          <td><b><?php echo $test_IPS6 ?></b></td>
-          <td><b><?php echo $test_IPS7 ?></b></td>
-          <td><b><?php echo $test_SKS ?></b></td>
-          <td><b class="badge <?php echo $badge ?>"><?php echo $sts ?></b></td>
-        </tr>
+            <tr class="<?php echo $color; ?>">
+              <td><?php echo $n++;?></td>
+              <td><?php echo $val['Nama'];?></td>
+              <td><?php echo $val['IPS1'];?></td>
+              <td><?php echo $val['IPS2'];?></td>
+              <td><?php echo $val['IPS3'];?></td>
+              <td><?php echo $val['IPS4'];?></td>
+              <td><?php echo $val['IPS5'];?></td>
+              <td><?php echo $val['IPS6'];?></td>
+              <td><?php echo $val['IPS7'];?></td>
+              <td><?php echo $val['Sks_lulus'];?></td>
+              <td><b class="badge <?php echo $tepatge ?>"><?php echo $sts ?></b></td>
+              <td><?php echo $val['Distance'];?></td>
+            </tr>
+            <?php
+          }
+          ?>
+        </tbody>
       </table>
-    </div>
-  <?php endif; ?>
-</div>
+
+      <figure class="highcharts-figure"><div id="container"></div></figure>
+
+    <?php endif; ?>
+  </div>
 
 </body>
 </html>

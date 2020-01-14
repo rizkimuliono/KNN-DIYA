@@ -43,7 +43,7 @@
               </div>
             </div>
 
-            <!-- <div class="navbar-form navbar-left">
+            <div class="navbar-form navbar-left">
               <div class="dropdown">
                 <div class="btn btn-success dropdown-toggle" data-toggle="dropdown">PREDIKSI KNN
                   <span class="caret"></span></div>
@@ -52,7 +52,7 @@
                     <li><a href='test-knn-multi.php'>KNN Multi</a></li>
                   </ul>
                 </div>
-              </div> -->
+              </div>
 
             <div class="navbar-form navbar-left">
               <div class="dropdown">

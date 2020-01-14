@@ -181,13 +181,11 @@ while ($val = mysqli_fetch_array($res)){
           }else if($K==2){
             $hasil = $r[0];
           }else{
-
             if ($Good > $Bad) {
               $hasil = 'Good';
             }else{
               $hasil = 'Bad';
             }
-
           }
 
           //INSERT HASIL ==========
