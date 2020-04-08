@@ -1,6 +1,6 @@
 # KNN-Prediksi Kelulusan Tepat Waktu Mahasiswa Fakultas Teknik (Penelitian Dosen : DIYA UMA)
 Prediksi Mahasiswa dengan menggunakan algoritma K-Nearest Neighbours (KNN)
-Menggunakan bahasa pemrograman PHP Mysql + Bootstrap 3
+Menggunakan bahasa pemrograman Native PHP Mysql + Bootstrap 3
 
 ![Halaman Depan](http://rizkimuliono.blog.uma.ac.id/wp-content/uploads/sites/365/2020/04/Screen-Shot-2020-04-08-at-21.59.14.png)
 
